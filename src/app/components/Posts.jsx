@@ -7,10 +7,12 @@ export default async function Posts() {
   const q = query(collection(db, 'posts'), orderBy('timestamp', 'desc'));
   const querySnapshot = await getDocs(q);
 
-  let data = [];
-  querySnapshot.forEach(doc => {
-    data.push({id: doc.id, ...doc.data() });
-  })
+  // let data = [];
+  // querySnapshot.forEach(doc => {
+  //   data.push({id: doc.id, ...doc.data() });
+  // })
+
+  const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
   return (
     <div>

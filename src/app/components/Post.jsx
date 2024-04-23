@@ -1,3 +1,5 @@
+"use client"
+
 import { HiOutlineDotsVertical } from "react-icons/hi"
 import LikeSection from "./LikeSection"
 import CommentSection from "./CommentSection"

@@ -1,24 +1,33 @@
-import { app } from "@/firebase"
-import { collection, getDocs, getFirestore, orderBy, query } from "firebase/firestore"
+"use client"
+
+import { useEffect, useState } from "react";
+import { app } from "@/firebase";
+import { collection, getFirestore, onSnapshot, orderBy, query } from "firebase/firestore";
 import Post from "./Post";
 
-export default async function Posts() {
+export default function Posts() {
+  const [posts, setPosts] = useState([]);
   const db = getFirestore(app);
-  const q = query(collection(db, 'posts'), orderBy('timestamp', 'desc'));
-  const querySnapshot = await getDocs(q);
 
-  // let data = [];
-  // querySnapshot.forEach(doc => {
-  //   data.push({id: doc.id, ...doc.data() });
-  // })
-
-  const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  useEffect(() => {
+    const q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const data = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setPosts(data);
+    });
+    return () => unsubscribe();
+  }, [db]);
 
   return (
     <div>
-      {data.map(post => (
+      {posts.map((post) => (
         <Post key={post.id} post={post} />
       ))}
     </div>
-  )
+  );
 }
+
+

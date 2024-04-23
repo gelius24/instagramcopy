@@ -64,16 +64,20 @@ export default function Header() {
 
 async function handleSubmit() {
   setPostUploading(true);
-  const docRef = await addDoc(collection(db, 'posts'), {
-    username: session.user.name,
-    caption,
-    profileImg: session.user.image,
-    image: imageFileUrl,
-    timestamp: serverTimestamp()
-  })
-  setPostUploading(false);
-  setIsOpen(false);
-  location.reload();
+  try {
+    const docRef = await addDoc(collection(db, 'posts'), {
+      username: session.user.name,
+      caption,
+      profileImg: session.user.image,
+      image: imageFileUrl,
+      timestamp: serverTimestamp()
+    })
+    setPostUploading(false);
+    setIsOpen(false);
+    location.reload();
+  } catch (error) {
+    console.log(error)
+  }
 }
 
   return (
